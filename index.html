@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雨夜思绪</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1419 100%);
+            overflow: hidden;
+            position: relative;
+            font-family: 'Microsoft YaHei', serif;
+        }
+
+        .rain-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rain-drop {
+            position: absolute;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(173,216,230,0.3));
+            width: 2px;
+            border-radius: 50px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(10deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(10deg);
+                opacity: 0;
+            }
+        }
+
+        .window {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 300px;
+            background: rgba(0,0,0,0.3);
+            border: 8px solid #2d3a4b;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            z-index: 2;
+        }
+
+        .window-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2px;
+            height: 100%;
+            background: #2d3a4b;
+        }
+
+        .window-frame-h {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 2px;
+            background: #2d3a4b;
+        }
+
+        .text-overlay {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            text-align: center;
+        }
+
+        .text-line {
+            font-size: 24px;
+            color: #e8e8e8;
+            margin: 15px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .text-line:nth-child(1) { animation-delay: 0.5s; }
+        .text-line:nth-child(2) { animation-delay: 1.5s; }
+        .text-line:nth-child(3) { animation-delay: 2.5s; }
+        .text-line:nth-child(4) { animation-delay: 3.5s; }
+        .text-line:nth-child(5) { animation-delay: 4.5s; color: #87ceeb; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mood-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(135,206,235,0.1), rgba(255,255,255,0.05));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .mood-circle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .mood-circle:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 30%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .mood-circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
+        }
+
+        .lightning {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            animation: lightning 8s infinite;
+            z-index: 0;
+        }
+
+        @keyframes lightning {
+            0%, 90%, 100% { opacity: 0; }
+            91%, 92% { opacity: 0.8; }
+            93%, 94% { opacity: 0; }
+            95% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lightning"></div>
+    
+    <div class="rain-container" id="rainContainer"></div>
+    
+    <div class="mood-circle"></div>
+    <div class="mood-circle"></div>
+    <div class="mood-circle"></div>
+    
+    <div class="window">
+        <div class="window-frame"></div>
+        <div class="window-frame-h"></div>
+    </div>
+    
+    <div class="text-overlay">
+        <div class="text-line">雨还在下像在说话</div>
+        <div class="text-line">雨还在下你听得见吗</div>
+        <div class="text-line">雨还在下像在寻你</div>
+        <div class="text-line">雨还在下你仔细听啊</div>
+        <div class="text-line">是我的思念满满答答</div>
+    </div>
+
+    <script>
+        function createRainDrop() {
+            const rainDrop = document.createElement('div');
+            rainDrop.className = 'rain-drop';
+            rainDrop.style.left = Math.random() * 100 + 'vw';
+            rainDrop.style.height = Math.random() * 50 + 30 + 'px';
+            rainDrop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+            rainDrop.style.opacity = Math.random() * 0.6 + 0.2;
+            
+            document.getElementById('rainContainer').appendChild(rainDrop);
+            
+            setTimeout(() => {
+                rainDrop.remove();
+            }, 2000);
+        }
+
+        // 创建雨滴效果
+        setInterval(createRainDrop, 50);
+
+        // 添加鼠标移动效果
+        document.addEventListener('mousemove', (e) => {
+            const circles = document.querySelectorAll('.mood-circle');
+            circles.forEach((circle, index) => {
+                const speed = (index + 1) * 0.02;
+                const x = (e.clientX - window.innerWidth / 2) * speed;
+                const y = (e.clientY - window.innerHeight / 2) * speed;
+                circle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
